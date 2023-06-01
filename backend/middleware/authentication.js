@@ -5,14 +5,15 @@ const authentication = (req, res, next) => {
 
     if(!authentization) {
         return res.status(401).json({
-            message: "1st Unauthorized"
+            message: "1st Unauthorized error",
+            headers: req.headers
         });
     }
     const user = verifyToken(authentization);
     
     if(!user) {
         return res.status(401).json({
-            message: "2nd Unauthorized"
+            message: "2nd Unauthorized error"
         });
     }
 

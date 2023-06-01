@@ -3,6 +3,7 @@ import dt from "date-utils";
 import { Comment } from "../model/Article.js";
 
 const toggleLike = (req, res) => {
+    console.log("this is toggleLike at backend");
     try {
         const { userid, articleid } = req.body;
         const userData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
@@ -10,14 +11,15 @@ const toggleLike = (req, res) => {
         const myData = userData.find((user) => user.userid === userid);
         const article = articlesData.find((article) => article.articleid === articleid);
 
+
         if(myData.like !== undefined) {
-            console.log("like list before: " + myData.like);
+            // console.log("like list before: " + myData.like);
             const usersLikeList = myData.like;
             if(usersLikeList.includes(articleid)) {
-                console.log("there is same articleid in user like list");
+                // console.log("there is same articleid in user like list");
                 const usersIndex = usersLikeList.indexOf(articleid);
                 usersLikeList.splice(usersIndex, 1);
-                console.log("like list after(remove): " + usersLikeList);
+                // console.log("like list after(remove): " + usersLikeList);
                 const newUserData = userData.map((user) => {
                     if(user.userid === userid) {
                         console.log(user);
@@ -25,10 +27,9 @@ const toggleLike = (req, res) => {
                     }
                     return user
                 });
-                
                 fs.writeFileSync("users.json", JSON.stringify(newUserData));
             } else {
-                console.log("there is not the articleid in user like list");
+                // console.log("there is not the articleid in user like list");
                 usersLikeList.push(articleid);
                 console.log("like list after(add): " + usersLikeList);
                 const newUserData = userData.map((user) => {

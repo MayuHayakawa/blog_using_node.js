@@ -8,10 +8,7 @@ const getMyInfo = (req, res) => {
 
         res.status(200).json({
             message: "User profile",
-            user: {
-                username: user.username,
-                email: user.email,
-            },
+            user: user
         });
     } catch(error) {
         console.log(error);

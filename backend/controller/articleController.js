@@ -9,7 +9,8 @@ const getAllArticles = (req, res) => {
         console.log(articleData);
 
         res.status(200).json({
-            message: "Get all articles"
+            message: "Get all articles",
+            articles: articleData,
         });
     } catch(error) {
         console.log(error);
@@ -19,20 +20,28 @@ const getAllArticles = (req, res) => {
     }
 }
 
-const getArticles = (req, res) => {
+const getArticle = (req, res) => {
     try {
-        const { userid } = req.body;
+        // const { userid } = req.body;
+        // const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
+        // const myArticles = articleData.find((article) => article.userid === userid);
+        // console.log(myArticles);
+
+        // res.status(200).json({
+        //     message: "Get my articles",
+        // });
+        const { articleid } = req.body;
         const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
-        const myArticles = articleData.find((article) => article.userid === userid);
-        console.log(myArticles);
+        const article = articleData.find((article) => article.articleid === articleid);
 
         res.status(200).json({
             message: "Get my articles",
+            article: article
         });
     } catch(error) {
         console.log(error);
         res.status(500).json({
-            message: "Internal server error"
+            message: "Internal server error",
         });
     }
 }
@@ -41,22 +50,31 @@ const createArticle = (req, res) => {
     try {
         const { userid, title, content } = req.body;
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
+        const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
+        const user = usersData.find((user) => user.userid === userid);
         const articleid = uniqid();
         const now = new Date();
         const time = now.toFormat("YYYY/MM/DD HH24:MI");
-        const like = 0;
+        const like = [];
         const comment = [];
 
         const newArticle = new Article(articleid, userid, time, title, content, like, comment);
         articlesData.push(newArticle);
         fs.writeFileSync("articles.json", JSON.stringify(articlesData));
 
+        const usersArticleList = user.articles;
+        usersArticleList.push(articleid);
+        const newUsersData = usersData.map((user) => {
+            if(user.userid === userid) {
+                return { ...user, articles: usersArticleList };
+            }
+            return user
+        });
+        fs.writeFileSync("users.json", JSON.stringify(newUsersData));
+
         res.status(201).json({
             message: "posted new article successfully",
-            article: {
-                articleid: newArticle.articleid,
-                title: title,
-            },
+            // article: newArticle,
         });
     } catch(error) {
         console.log(error);
@@ -121,4 +139,4 @@ const deleteArticle = (req, res) => {
     }
 }
 
-export { getAllArticles, getArticles, createArticle, updataArticle, deleteArticle }
+export { getAllArticles, getArticle, createArticle, updataArticle, deleteArticle }

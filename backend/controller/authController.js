@@ -42,7 +42,8 @@ const loginController = (req, res) => {
     try {
         const { email, password } = req.body;
         const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
-        console.log(usersData);
+        console.log("usersData: " + usersData);
+        
         const user = usersData.find((user) => user.email === email);
         if(!user) {
             return res.status(401).json({
@@ -51,9 +52,7 @@ const loginController = (req, res) => {
         }
 
         const compareResult = comparePassword(password, user.password);
-
         compareResult.then((compared) => {
-            console.log(compared);
             if(!compared) {
                 return res.status(401).json({
                     message: "Invalid password",
@@ -61,9 +60,11 @@ const loginController = (req, res) => {
             }
 
             const token = generateToken({
-                userid: user.iserid,
+                userid: user.userid,
                 username: user.username,
                 email: user.email,
+                articles: user.articles,
+                like: user.like,
             });
 
             res.status(200).json({
@@ -73,6 +74,8 @@ const loginController = (req, res) => {
                     userid: user.userid,
                     username: user.username,
                     email: user.email,
+                    articles: user.articles,
+                    like: user.like,
                 },
             });
         })

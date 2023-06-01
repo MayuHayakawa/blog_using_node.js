@@ -1,0 +1,56 @@
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+
+const Nav = styled.nav`
+    width: 100%;
+    height: 5rem;
+    background-color: white;
+    ul {
+        height: 100%;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: space-around;
+        list-style: none;
+    }
+    a {
+        color: black;
+        text-decoration: none;
+    }
+`
+
+const Navbar = () => {
+    const user = useSelector(state => state.auth.data);
+
+  return (
+    <Nav>
+        <ul>
+            <h1>
+                <Link to="/">MYBLOG</Link>
+            </h1>
+            <li>
+                <Link to="/">Home</Link>
+            </li>
+            { user && (
+                <>
+                    <li>
+                        <Link to="/dashboard">My Page</Link>
+                    </li>
+                    <li>
+                        <Link to="/create">Create Post</Link>
+                    </li>
+                </>
+            )}
+            <li>
+                <Link to="/register">Register</Link>
+            </li>
+            <li>
+                <Link to="/login">Login</Link>
+            </li>
+        </ul>
+    </Nav>
+  )
+}
+
+export default Navbar
