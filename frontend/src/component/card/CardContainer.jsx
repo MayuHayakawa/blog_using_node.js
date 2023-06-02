@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ToggleLike from '../reaction/ToggleLike';
+import Updata from '../reaction/Updata';
+import Delete from '../reaction/Delete';
 
 const Container = styled.div`
   width: 100%;
@@ -18,74 +18,26 @@ const Card = styled.div`
   border: 1px solid white;
 `
 
-const updataArticle = ("article/updata", async({ articleid, title, content }) => {
-  try {
-    const res = await axios.put(import.meta.env.VITE_BASE_URL + "/api/article/updata", { articleid, title, content });
-    return res.data;
-  } catch(error) {
-    console.log(error);
-  }
-})
-
 const CardContainer = ( data ) => {
-  const navigate = useNavigate();
   const [ isUpdata, setIsUpdata ] = useState(false);
-  const [ newArticle, setNewArticle ] = useState({
-    articleid: data.data.articleid,
-    title: "",
-    content: ""
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewArticle((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    updataArticle(newArticle);
-    setIsUpdata(false);
-    navigate("/dashboard");
-  }
   return (
     <Container>
       { data.data.map((article) => {
         return (
-          <Card key={article.id}>
+          <Card key={article.articleid}>
             <div>
               <h2>title:{article.title}</h2>
               <p>content:{article.content}</p>
               <ToggleLike data={article.articleid}/>
               { data.edit === true && (
-                <button onClick={() => setIsUpdata(true)}>Edit</button>
+                <>
+                <button onClick={() => setIsUpdata(!isUpdata)}>Edit</button>
+                <Delete data={article} />
+                </>
               )}
-              <button>Button</button>
             </div>
-            { isUpdata === true && (
-              <form onSubmit={handleSubmit}>
-                <div>
-                  <label>Title</label>
-                  <input 
-                    onChange={handleChange}
-                    type='text'
-                    id='title'
-                    name='title'
-                    placeholder={article.title}
-                  />
-                </div>
-                <div>
-                  <label>Content</label>
-                  <input 
-                    onChange={handleChange}
-                    type='text'
-                    id='content'
-                    name='content'
-                    placeholder={article.content}
-                  />
-                </div>
-                <button>done</button>
-              </form>
-            )}
+            { isUpdata === true && ( <Updata data={article} setIsUpdata={setIsUpdata}/>)}
           </Card>
         )
       })}

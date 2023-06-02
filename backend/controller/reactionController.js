@@ -3,14 +3,13 @@ import dt from "date-utils";
 import { Comment } from "../model/Article.js";
 
 const toggleLike = (req, res) => {
-    console.log("this is toggleLike at backend");
     try {
         const { userid, articleid } = req.body;
+
         const userData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const myData = userData.find((user) => user.userid === userid);
         const article = articlesData.find((article) => article.articleid === articleid);
-
 
         if(myData.like !== undefined) {
             // console.log("like list before: " + myData.like);
@@ -22,7 +21,6 @@ const toggleLike = (req, res) => {
                 // console.log("like list after(remove): " + usersLikeList);
                 const newUserData = userData.map((user) => {
                     if(user.userid === userid) {
-                        console.log(user);
                         return { ...user, like: usersLikeList };
                     }
                     return user

@@ -6,14 +6,11 @@ import { Article } from "../model/Article.js";
 const getAllArticles = (req, res) => {
     try {
         const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
-        console.log(articleData);
-
         res.status(200).json({
             message: "Get all articles",
             articles: articleData,
         });
     } catch(error) {
-        console.log(error);
         res.status(500).json({
             message: "Internal server error"
         });
@@ -90,6 +87,7 @@ const updataArticle = (req, res) => {
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const now = new Date();
         const time = now.toFormat("YYYY/MM/DD HH24:MI");
+        console.log(articleid, title, content);
 
         const newArticlesData = articlesData.map((article) => {
             if(article.articleid === articleid) {
@@ -102,10 +100,7 @@ const updataArticle = (req, res) => {
     
         res.status(200).json({
             message: "put the article successfully",
-            article: {
-                articleid: articleid,
-                title: title,
-            },
+            // article: newArticlesData
         });
     } catch(error) {
         console.log(error);
@@ -118,18 +113,34 @@ const updataArticle = (req, res) => {
 const deleteArticle = (req, res) => {
     try {
         const { articleid } = req.body;
+        // const { userid, articleid } = req.body;
+
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const article = articlesData.find((article) => article.articleid === articleid);
-        const index = articlesData.indexOf(article);
-        articlesData.splice(index, 1);
+        // const userData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
+        // const myData = userData.find((user) => user.userid === userid);
+
+        const articleIndex = articlesData.indexOf(article);
+        articlesData.splice(articleIndex, 1);
         fs.writeFileSync("articles.json", JSON.stringify(articlesData));
+        
+        // if(myData.articles != undefined) {
+        //     const userArticleList = user.articles;
+        //     const userIndex = userArticleList.indexOf(articleid);
+        //     userArticleList.splice(userIndex, 1);
+        //     const newUsersData = userData.map((user) => {
+        //         if(user.userid === userid) {
+        //             return { ...user, articles: userArticleList };
+        //         }
+        //         return user;
+        //     });
+        //     fs.writeFileSync("users.json", JSON.stringify(newUsersData));
+        // }
 
         res.status(200).json({
             message: "deleted the article successfully",
-            article: {
-                articleid: articleid,
-                title: article.title,
-            },
+            article: articlesData,
+            // user : userData
         });
     } catch(error) {
         console.log(error);

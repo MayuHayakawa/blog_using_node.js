@@ -13,15 +13,16 @@ const toggleLike = ("reaction/like", async({ userid, articleid }) => {
 
 const ToggleLike = (data) => {
   const user = useSelector(state => state.auth.data);
-  // console.log(user.user.like);
-  // console.log(data.data);
-  const isLike = user.user.like.includes(data.data);
-  
+  const [ isLike, setIsLike ] = useState(false);  
   const [ info, setInfo ] = useState({
     userid: "",
     articleid: ""
   });
+
   useEffect(() => {
+    if(user !=null && data != null && user.user.like != undefined) {
+      setIsLike(user.user.like.includes(data.data));
+    }
     if(user != null && data != null) {
       setInfo({
         userid: user.user.userid,

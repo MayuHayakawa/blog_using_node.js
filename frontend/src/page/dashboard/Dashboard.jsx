@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-// import { useSelector } from 'react-redux';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getMyInfo } from '../../redux/userSlice';
 import axios from 'axios';
 import LikeArticles from './LikeArticles';
@@ -10,25 +10,22 @@ import CardContainer from '../../component/card/CardContainer';
 const Dashboard = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.data);
-  // console.log(user.token);
+  const articles = useSelector(state => state.article.data);
+
+  useEffect(() => {
+    if(user != null) {
+      axios.defaults.headers.common['authentization'] = `${user.token}`;
+      dispatch(getMyInfo(user.user.email));
+    }
+  }, [dispatch, user]);
 
   const [ userInfo, setUserInfo ] = useState({});
   useEffect(() => {
     if(user != null) {
-      const myInfo = dispatch(getMyInfo({toekn:user.token, email:user.user.email}));
-      console.log(myInfo);
-      // setUserInfo(user.user);
+      setUserInfo(user.user);
     }
-  }, [dispatch, user]);
+  }, [user]);
   
-  const [ articles, setArticles ] = useState([]);
-  useEffect(() => {
-    axios.get(import.meta.env.VITE_BASE_URL + "/api/article/all")
-      .then((res) => {
-        setArticles(res.data.articles);
-      });
-  }, []);
-
   return (
     <div>
       <h1>Dashboard</h1>
