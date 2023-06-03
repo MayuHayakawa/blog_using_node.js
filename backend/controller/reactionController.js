@@ -95,12 +95,12 @@ const toggleLike = (req, res) => {
 
 const addComment = (req, res) => {
     try {
-        const { articleid, userid, username, content } = req.body;
+        const { articleid, userid, username, time, content } = req.body;
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const article = articlesData.find((article) => article.articleid === articleid);
         const commentList = article.comment;
-        const now = new Date();
-        const time = now.toFormat("YYYY/MM/DD HH24:MI");
+        // const now = new Date();
+        // const time = now.toFormat("YYYY/MM/DD HH24:MI");
 
         const newCommentList = new Comment(userid, username, time, content);
         commentList.push(newCommentList);

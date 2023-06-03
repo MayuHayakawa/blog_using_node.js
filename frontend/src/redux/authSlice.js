@@ -26,7 +26,23 @@ const authSlice = createSlice({
         error: null,
         loading: false
     },
-    reducers: {},
+    reducers: {
+        updataPostList: (state, action) => {
+            state.data.user.articles.push(action.payload);
+        },
+        removePostList: (state, action) => {
+            state.data.user.articles = state.data.user.articles.filter((article) => article != action.payload);
+        },
+        updataLikeList: (state, action) => {
+            if(state.data.user.like != undefined) {
+                if(state.data.user.like.includes(action.payload)) {
+                    state.data.user.like = state.data.user.like.filter((article) => article != action.payload);
+                } else {
+                    state.data.user.like.push(action.payload);
+                }
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(login.pending, (state) => {
             state.loading = true;
@@ -34,7 +50,7 @@ const authSlice = createSlice({
         }).addCase(login.fulfilled, (state, action) => {
             state.loading = false;
             state.data = action.payload;
-            // console.log(state.data);
+            console.log(state.data);
         }).addCase(login.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
@@ -42,4 +58,5 @@ const authSlice = createSlice({
     }
 });
 
+export const { updataPostList, removePostList, updataLikeList } = authSlice.actions;
 export default authSlice.reducer;

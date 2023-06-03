@@ -1,17 +1,18 @@
+import { useSelector } from 'react-redux';
 import CardContainer from '../../component/card/CardContainer';
 
-const MyArticles = ( data ) => {
-  const alldata = data.all;
-  const mydata = data.my;
-
+const MyArticles = () => {
+  const user = useSelector(state => state.auth.data);
+  const articles = useSelector(state => state.article.data);
   const myArray = new Array;
-  alldata.map((article) => {
-    mydata.map((my) => {
-      if(article.articleid === my) {
+
+  if(articles != undefined && articles.length > 0) {
+    articles.map((article) => {
+      if(article != undefined && user != undefined && user.user != undefined && user.user.like != undefined && article.userid === user.user.userid) {
         myArray.push(article);
       }
-    })
-  });
+    });
+  }
 
   return (
     <CardContainer data={myArray} edit={true}/>

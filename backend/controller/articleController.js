@@ -19,21 +19,17 @@ const getAllArticles = (req, res) => {
 
 const getArticle = (req, res) => {
     try {
-        // const { userid } = req.body;
-        // const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
-        // const myArticles = articleData.find((article) => article.userid === userid);
-        // console.log(myArticles);
-
-        // res.status(200).json({
-        //     message: "Get my articles",
-        // });
         const { articleid } = req.body;
+        console.log(req.body);
         const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const article = articleData.find((article) => article.articleid === articleid);
+        const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
+        const author = usersData.find((user) => user.userid === article.userid);
 
         res.status(200).json({
-            message: "Get my articles",
-            article: article
+            message: "Get the articles",
+            article: article,
+            author: author
         });
     } catch(error) {
         console.log(error);
@@ -45,15 +41,15 @@ const getArticle = (req, res) => {
 
 const createArticle = (req, res) => {
     try {
-        const { userid, title, content } = req.body;
+        const { articleid, userid, time, title, content, like, comment } = req.body;
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
         const user = usersData.find((user) => user.userid === userid);
-        const articleid = uniqid();
-        const now = new Date();
-        const time = now.toFormat("YYYY/MM/DD HH24:MI");
-        const like = [];
-        const comment = [];
+        // const articleid = uniqid();
+        // const now = new Date();
+        // const time = now.toFormat("YYYY/MM/DD HH24:MI");
+        // const like = [];
+        // const comment = [];
 
         const newArticle = new Article(articleid, userid, time, title, content, like, comment);
         articlesData.push(newArticle);
@@ -114,33 +110,59 @@ const deleteArticle = (req, res) => {
     try {
         const { articleid } = req.body;
         // const { userid, articleid } = req.body;
+        // console.log(req.body);
+        // console.log(userid);
+        console.log(articleid);
 
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const article = articlesData.find((article) => article.articleid === articleid);
-        // const userData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
+        const userData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
         // const myData = userData.find((user) => user.userid === userid);
 
         const articleIndex = articlesData.indexOf(article);
         articlesData.splice(articleIndex, 1);
         fs.writeFileSync("articles.json", JSON.stringify(articlesData));
+
+        userData.map((user) => {
+            if(user.articles != undefined) {
+                if(user.articles.includes(articleid)) {
+                    user.articles = user.articles.filter((item) => item != articleid);
+                }
+            }
+            if(user.like != undefined) {
+                if(user.like.includes(articleid)) {
+                    user.like = user.like.filter((item) => item != articleid);
+                }
+            }
+        })
+
+        fs.writeFileSync("users.json", JSON.stringify(userData));
         
-        // if(myData.articles != undefined) {
-        //     const userArticleList = user.articles;
-        //     const userIndex = userArticleList.indexOf(articleid);
-        //     userArticleList.splice(userIndex, 1);
+        // if(myData.articles != undefined && myData.like != undefined) {
+        //     const userArticleList = myData.articles;
+        //     const userArticleIndex = userArticleList.indexOf(articleid);
+        //     userArticleList.splice(userArticleIndex, 1);
+
+        //     const userLikeList = myData.like;
+        //     const userLikeIndex = userLikeList.indexOf(articleid);
+        //     userLikeList.splice(userLikeIndex, 1);
+
         //     const newUsersData = userData.map((user) => {
         //         if(user.userid === userid) {
-        //             return { ...user, articles: userArticleList };
+        //             return { ...user, articles: userArticleList, like: userLikeList };
         //         }
         //         return user;
         //     });
+
         //     fs.writeFileSync("users.json", JSON.stringify(newUsersData));
-        // }
+        // };
+        
+
 
         res.status(200).json({
             message: "deleted the article successfully",
             article: articlesData,
-            // user : userData
+            user : userData
         });
     } catch(error) {
         console.log(error);

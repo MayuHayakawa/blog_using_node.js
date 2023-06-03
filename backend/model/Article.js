@@ -1,12 +1,12 @@
 class Article {
-    constructor(articleid, userid, time, title, content, like) {
+    constructor(articleid, userid, time, title, content, like, comment) {
         this.articleid = articleid;
         this.userid = userid;
         this.time = time;
         this.title = title;
         this.content = content;
         this.liked = like;
-        this.comment = new Comment;
+        this.comment = comment;
     }
 }
 

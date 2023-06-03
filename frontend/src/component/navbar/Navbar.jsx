@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const Nav = styled.nav`
     width: 100%;
-    height: 5rem;
+    height: 7rem;
     background-color: white;
     ul {
         height: 100%;
@@ -13,6 +13,12 @@ const Nav = styled.nav`
         align-items: center;
         justify-content: space-around;
         list-style: none;
+        h1 {
+            font-size: 2.5rem;
+        }
+        li {
+            font-size: 1.5rem;
+        }
     }
     a {
         color: black;

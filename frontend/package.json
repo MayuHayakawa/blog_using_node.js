@@ -12,12 +12,15 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
+    "date-utils": "^1.2.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.9.0",
     "react-redux": "^8.0.7",
     "react-router-dom": "^6.11.2",
     "react-scripts": "^5.0.1",
-    "styled-components": "^5.3.11"
+    "styled-components": "^5.3.11",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",

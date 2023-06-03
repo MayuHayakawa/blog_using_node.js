@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getMyInfo = createAsyncThunk("user/me", async(email) => {
-    console.log(email);
+    // console.log(email);
     try {
         const res = await axios.get(import.meta.env.VITE_BASE_URL + "/api/user/me", email );
         return res.data;
@@ -36,7 +36,7 @@ const userSlice = createSlice({
         }).addCase(getMyInfo.fulfilled, (state, action) => {
             state.loading = false;
             state.data = action.payload;
-            console.log(state.data);
+            // console.log(state.data);
         }).addCase(getMyInfo.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
