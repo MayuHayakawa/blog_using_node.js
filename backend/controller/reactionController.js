@@ -1,6 +1,5 @@
 import fs from "fs-extra";
 import dt from "date-utils";
-import { Comment } from "../model/Article.js";
 
 const toggleLike = (req, res) => {
     try {

@@ -6,6 +6,7 @@ import useRoutes from "./route/userRoutes.js";
 import articleRoutes from "./route/articleRoutes.js";
 import reactionRoutes from "./route/reactionRoutes.js";
 import cors from "cors";
+// import db from "./db/db.js";
 
 dotenv.config();
 

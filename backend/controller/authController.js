@@ -1,10 +1,10 @@
 import fs from "fs-extra";
-import uniqid from "uniqid";
 import User from "../model/User.js";
+import uniqid from "uniqid";
 import { hashPassword, comparePassword } from "../util/passwordUtil.js";
 import { generateToken } from "../util/jwtUtil.js";
 
-const registerController = (req, res) => {
+const registerController = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         const userid = uniqid();
@@ -17,16 +17,34 @@ const registerController = (req, res) => {
                 message: "Email already exists",
             });
         }
+        // mongo DB
+        // let user = await User.findOne({ email: email });
+        // if(user) {
+        //     return res.status(400).json({
+        //     message: "Email already exists",
+        //   });
+        // }
 
         const hashedPassword = hashPassword(password);
         hashedPassword.then((hashedPassword) => {
-            const newUser = new User(userid, username, email, hashedPassword, articles, like);
-            usersData.push(newUser);
-            fs.writeFileSync("users.json", JSON.stringify(usersData));
-            res.status(201).json({
-                message: "User created successfully",
-                user: newUser
-            });
+          const newUser = new User({
+            userid,
+            username,
+            email,
+            password: hashedPassword,
+            articles,
+            like
+          });
+
+          usersData.push(newUser);
+          fs.writeFileSync("users.json", JSON.stringify(usersData));
+          // mongo DB
+          // newUser.save();
+
+          res.status(201).json({
+            message: "User created successfully",
+            user: newUser
+          });
         });
     } catch(error) {
         console.log(error);
@@ -36,13 +54,14 @@ const registerController = (req, res) => {
     }
 };
 
-const loginController = (req, res) => {
+const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(req.body);
-        
+
         const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));        
         const user = usersData.find((user) => user.email === email);
+        // mongo DB
+        // const user = await User.findOne({ email: email });
         
         if(!user) {
             return res.status(401).json({

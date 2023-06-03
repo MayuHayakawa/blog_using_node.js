@@ -12,10 +12,12 @@ const DashboardContainer = styled.div`
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   text-align: center;
-  gap: 2rem;
   h1 {
+    font-size: 5rem;
+  }
+  .subTitle {
+    margin-top: 5rem;
     font-size: 3rem;
   }
 `
@@ -47,19 +49,19 @@ const Dashboard = () => {
           <div>
             { userInfo.like != undefined && userInfo.like.length > 0 && (
               <div>
-                <h2>Your favorite articles</h2>
+                <h2 className='subTitle'>Your favorite articles</h2>
                 <LikeArticles />
               </div>
             )}
             { userInfo.articles != undefined && userInfo.articles.length > 0 && (
               <div>
-                <h2>Your articles</h2>
+                <h2 className='subTitle'>Your articles</h2>
                 <MyArticles />
               </div>
             )}
             { articles != undefined && articles.length > 0 && (
               <div>
-                <h2>All articles</h2>
+                <h2 className='subTitle'>All articles</h2>
                 <CardContainer data={articles} edit={false}/>
               </div>
             )}

@@ -1,14 +1,17 @@
 import fs from "fs-extra";
+import User from "../model/User.js";
+import { Article } from "../model/Article.js";
 import uniqid from "uniqid";
 import dt from "date-utils";
-import { Article } from "../model/Article.js";
 
-const getAllArticles = (req, res) => {
+const getAllArticles = async (req, res) => {
     try {
-        const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
+        const allArticles = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
+        // mongo DB
+        // const allArticles = await Article.find();
         res.status(200).json({
             message: "Get all articles",
-            articles: articleData,
+            articles: allArticles,
         });
     } catch(error) {
         res.status(500).json({
@@ -17,14 +20,16 @@ const getAllArticles = (req, res) => {
     }
 }
 
-const getArticle = (req, res) => {
+const getArticle = async (req, res) => {
     try {
         const { articleid } = req.body;
-        console.log(req.body);
         const articleData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const article = articleData.find((article) => article.articleid === articleid);
         const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
         const author = usersData.find((user) => user.userid === article.userid);
+        // mongo DB
+        // const article = await Article.find({ articleid: articleid });
+        // const author = await User.find({ articleid: articleid });
 
         res.status(200).json({
             message: "Get the articles",
@@ -39,23 +44,32 @@ const getArticle = (req, res) => {
     }
 }
 
-const createArticle = (req, res) => {
+const createArticle = async (req, res) => {
     try {
-        const { articleid, userid, time, title, content, like, comment } = req.body;
+        const { articleid, userid, time, title, content, liked, comment } = req.body;
+        
         const articlesData = JSON.parse(fs.readFileSync("articles.json", "utf-8"));
         const usersData = JSON.parse(fs.readFileSync("users.json", "utf-8"));
         const user = usersData.find((user) => user.userid === userid);
-        // const articleid = uniqid();
-        // const now = new Date();
-        // const time = now.toFormat("YYYY/MM/DD HH24:MI");
-        // const like = [];
-        // const comment = [];
+        // mongo DB
+        // const user = await User.find();
 
-        const newArticle = new Article(articleid, userid, time, title, content, like, comment);
+        const newArticle = new Article({
+            articleid,
+            userid,
+            time,
+            title,
+            content,
+            liked,
+            comment
+        });
+
         articlesData.push(newArticle);
         fs.writeFileSync("articles.json", JSON.stringify(articlesData));
+        // mongo DB
+        // newArticle.save();
 
-        const usersArticleList = user.articles;
+        const usersArticleList = await user.articles;
         usersArticleList.push(articleid);
         const newUsersData = usersData.map((user) => {
             if(user.userid === userid) {
@@ -64,10 +78,12 @@ const createArticle = (req, res) => {
             return user
         });
         fs.writeFileSync("users.json", JSON.stringify(newUsersData));
+        // mongo DB (error)
+        // await user.update({ userid: userid }, { $addToSet: { articles: articleid }});
 
         res.status(201).json({
             message: "posted new article successfully",
-            // article: newArticle,
+            article: newArticle,
         });
     } catch(error) {
         console.log(error);

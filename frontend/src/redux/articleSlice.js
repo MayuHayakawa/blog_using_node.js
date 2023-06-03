@@ -4,7 +4,7 @@ import axios from 'axios';
 export const getAllArticles = createAsyncThunk("article/all", async() => {
     try {
         const res = await axios.get(import.meta.env.VITE_BASE_URL + "/api/article/all");
-        // console.log(res.data);
+        console.log(res.data);
         return res.data.articles;
     } catch(error) {
         console.log(error);
