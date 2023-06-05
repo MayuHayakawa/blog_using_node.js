@@ -99,6 +99,7 @@ const CardContainer = ( data ) => {
   const navigate = useNavigate();
   // const [ isUpdata, setIsUpdata ] = useState(false);
   // const [ isComment, setIsComment ] = useState(false);
+  console.log(data);
 
   function handleRoute(id) {
     navigate(`/dashboard/${id}`);

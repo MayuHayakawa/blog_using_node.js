@@ -7,6 +7,7 @@ import { generateToken } from "../util/jwtUtil.js";
 const registerController = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+        console.log(req.body);
         const userid = uniqid();
         const articles = [];
         const like = [];
@@ -27,14 +28,9 @@ const registerController = async (req, res) => {
 
         const hashedPassword = hashPassword(password);
         hashedPassword.then((hashedPassword) => {
-          const newUser = new User({
-            userid,
-            username,
-            email,
-            password: hashedPassword,
-            articles,
-            like
-          });
+          const newUser = new User( userid, username, email, hashedPassword, articles, like );
+          
+          console.log(newUser);
 
           usersData.push(newUser);
           fs.writeFileSync("users.json", JSON.stringify(usersData));

@@ -19,7 +19,7 @@ const LikeArticles = () => {
   }
 
   return (
-    <CardContainer data={likeArray} edit={false} />
+    <CardContainer data={likeArray} edit={false} test={'like'} />
   )
 }
 

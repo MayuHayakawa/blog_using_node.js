@@ -54,15 +54,7 @@ const createArticle = async (req, res) => {
         // mongo DB
         // const user = await User.find();
 
-        const newArticle = new Article({
-            articleid,
-            userid,
-            time,
-            title,
-            content,
-            liked,
-            comment
-        });
+        const newArticle = new Article( articleid, userid, time, title, content, liked, comment);
 
         articlesData.push(newArticle);
         fs.writeFileSync("articles.json", JSON.stringify(articlesData));

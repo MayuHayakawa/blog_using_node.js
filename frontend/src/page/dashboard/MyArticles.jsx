@@ -15,7 +15,7 @@ const MyArticles = () => {
   }
 
   return (
-    <CardContainer data={myArray} edit={true}/>
+    <CardContainer data={myArray} edit={true} test={'my'} />
   )
 }
 

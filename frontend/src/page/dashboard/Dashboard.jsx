@@ -62,7 +62,7 @@ const Dashboard = () => {
             { articles != undefined && articles.length > 0 && (
               <div>
                 <h2 className='subTitle'>All articles</h2>
-                <CardContainer data={articles} edit={false}/>
+                <CardContainer data={articles} edit={false} test={'all'}/>
               </div>
             )}
           </div>
