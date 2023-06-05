@@ -41,6 +41,9 @@ const authSlice = createSlice({
                     state.data.user.like.push(action.payload);
                 }
             }
+        },
+        logOut: (state) => {
+            state.data = "";
         }
     },
     extraReducers: (builder) => {
@@ -58,5 +61,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { updataPostList, removePostList, updataLikeList } = authSlice.actions;
+export const { updataPostList, removePostList, updataLikeList, logOut } = authSlice.actions;
 export default authSlice.reducer;

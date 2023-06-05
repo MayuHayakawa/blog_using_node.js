@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut } from '../../redux/authSlice';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
@@ -28,6 +29,11 @@ const Nav = styled.nav`
 
 const Navbar = () => {
     const user = useSelector(state => state.auth.data);
+    const dispatch = useDispatch();
+
+    const handleClick = () => {
+        dispatch(logOut())
+    }
 
   return (
     <Nav>
@@ -51,9 +57,15 @@ const Navbar = () => {
             <li>
                 <Link to="/register">Register</Link>
             </li>
-            <li>
-                <Link to="/login">Login</Link>
-            </li>
+            { user ? (
+                <li>
+                    <Link to="/" onClick={handleClick}>Logout</Link>
+                </li>     
+            ):(
+                <li>
+                    <Link to="/login">Login</Link>
+                </li>
+            )}
         </ul>
     </Nav>
   )
