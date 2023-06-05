@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const register = createAsyncThunk("auth/register", async({ username, email, password }) => {
+    console.log(username, email, password);
     try {
         const res = await axios.post(import.meta.env.VITE_BASE_URL + "/api/auth/register", { username, email, password });
         return res.data;
@@ -11,6 +12,7 @@ export const register = createAsyncThunk("auth/register", async({ username, emai
 });
 
 export const login = createAsyncThunk("auth/login", async({ email, password }) => {
+    console.log(email, password);
     try {
         const res = await axios.post(import.meta.env.VITE_BASE_URL + "/api/auth/login", { email, password });
         return res.data;
@@ -42,8 +44,8 @@ const authSlice = createSlice({
                 }
             }
         },
-        logOut: (state) => {
-            state.data = "";
+        logOutUser: (state) => {
+            state.data = null;
         }
     },
     extraReducers: (builder) => {
@@ -57,9 +59,19 @@ const authSlice = createSlice({
         }).addCase(login.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
+        }).addCase(register.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        }).addCase(register.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload;
+            console.log(state.data);
+        }).addCase(register.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
         });
     }
 });
 
-export const { updataPostList, removePostList, updataLikeList, logOut } = authSlice.actions;
+export const { updataPostList, removePostList, updataLikeList, logOutUser } = authSlice.actions;
 export default authSlice.reducer;

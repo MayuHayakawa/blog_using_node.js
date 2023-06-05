@@ -54,6 +54,9 @@ const articleSlice = createSlice({
         },
         deletePost: (state, action) => {
             state.data = state.data.filter((article) => article.articleid != action.payload);
+        },
+        logOutPost: (state) => {
+            state.data = [];
         }
     },
     extraReducers: (builder) => {
@@ -70,6 +73,6 @@ const articleSlice = createSlice({
     }
 });
 
-export const { createPost, updataPost, updataLikedList, addCommentList, deletePost } = articleSlice.actions;
+export const { createPost, updataPost, updataLikedList, addCommentList, deletePost, logOutPost } = articleSlice.actions;
 export default articleSlice.reducer;
 

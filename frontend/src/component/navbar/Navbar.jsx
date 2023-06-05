@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../../redux/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { logOutUser } from '../../redux/authSlice';
+import { logOutPost } from '../../redux/articleSlice';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
@@ -19,6 +21,10 @@ const Nav = styled.nav`
         }
         li {
             font-size: 1.5rem;
+            p {
+                color: black;
+                cursor: pointer;
+            }
         }
     }
     a {
@@ -30,9 +36,13 @@ const Nav = styled.nav`
 const Navbar = () => {
     const user = useSelector(state => state.auth.data);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleClick = () => {
-        dispatch(logOut())
+        dispatch(logOutUser())
+        dispatch(logOutPost());
+        localStorage.removeItem('myblog_store');
+        navigate("/");
     }
 
   return (
@@ -59,7 +69,7 @@ const Navbar = () => {
             </li>
             { user ? (
                 <li>
-                    <Link to="/" onClick={handleClick}>Logout</Link>
+                    <p onClick={handleClick}>Logout</p>
                 </li>     
             ):(
                 <li>

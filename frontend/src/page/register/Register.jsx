@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+// import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../redux/authSlice';
+import { getAllArticles } from '../../redux/articleSlice';
 import styled from 'styled-components';
 
 const RegisterContainer = styled.div`
@@ -52,27 +55,28 @@ const RegisterContainer = styled.div`
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth);
+  // const user = useSelector((state) => state.auth);
 
-  const [userInfo, setUserInfo] = useState({
+  const [registerInfo, setRegisterInfo] = useState({
     username: "",
     email: "",
     password: ""
   });
 
-  useEffect(() => {
-    console.log(user);
-  }, [dispatch, user]);
+  // useEffect(() => {
+  //   console.log(user);
+  // }, [dispatch, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo((prev) => ({ ...prev, [name]: value }));
+    setRegisterInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(register(userInfo));
-    navigate("/login");
+    dispatch(register(registerInfo));
+    dispatch(getAllArticles());
+    navigate("/dashboard");
   }
 
   return (
